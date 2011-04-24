@@ -2,10 +2,11 @@
 #include <netinet/in.h>
 #include <sys/types.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <netdb.h>
 
 #define PORT 9876
-#define PORT_SERVER 9350
+//#define PORT_SERVER 9350
 
 int main(int argc, char* argv[])	//why argc and argv can be optional? if absence, enter command with arg will generate error?
 {
@@ -14,6 +15,7 @@ int main(int argc, char* argv[])	//why argc and argv can be optional? if absence
 	struct hostent *server;
 	char buffer[256];
 int n;
+int srvport;
 	
 	//1.create
 	
@@ -32,7 +34,9 @@ exit(0);
 	srvaddr.sin_family = AF_INET;
 	//printf("%d",sizeof(server->h_addr));
 	bcopy((char *)(server->h_addr), (char *)&srvaddr.sin_addr.s_addr, server->h_length);
-	srvaddr.sin_port = htons(PORT_SERVER);
+	
+	srvport = atoi(argv[2]);
+	srvaddr.sin_port = htons(srvport);
 	
 	//2.connect
 	printf("2. connect\n");
