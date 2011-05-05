@@ -6,29 +6,38 @@
 #include <netdb.h>
 
 #include "client.h"
+#include "../common/msg.h"
 
 #define PORT 9876
 //#define PORT_SERVER 9350
 
-void put(vkvsserver* server, char* k, char* value)
+
+
+void put(vkvsserver* server, char* k, char* v)
 {
-	connect(server);
+	if(server->connected == false)	{
+		connect(server);
+	}
+
 	
+
 
 }
 
-void send(vkvsserver* server, char* buffer, int size)
+void send(vkvsserver* server, char* wbuf, int wbufsize)
 {
 	//3.send
 	printf("3. send\n");
 	printf("\nEnter message that you want to send:\n");
-	bzero(buffer, 256);
-	fgets(buffer, 255, stdin);
-	n = write(initsock, buffer, strlen(buffer));
+	//bzero(buffer, 256);
+	//fgets(buffer, 255, stdin);
+	n = write(initsock, wbuf, wbufsize);
 	if(n<0)	{
 		printf("error writing to socket\n");
 	}
-	bzero(buffer, 256);
+	
+	char* rbuf = (char*)malloc(256);
+	bzero(rbuf, 256);
 	n = read(initsock, buffer, 255);
 	if(n<0)	{
 		printf("error reading from socket\n");
@@ -42,7 +51,7 @@ void connect(vkvsserver* server)	//why argc and argv can be optional? if absence
 {
 	int initsock;
 	struct sockaddr_in srvaddr;
-	struct hostent *server;
+	struct hostent *s;
 	char buffer[256];
 	int n;
 	int srvport;
@@ -55,17 +64,17 @@ void connect(vkvsserver* server)	//why argc and argv can be optional? if absence
 		printf("error opening socket\n");
 	}
 
-	server = gethostbyname(argv[1]);	//why no error this line when not including netdb.h???
-	if(server==NULL)	{
+	s = gethostbyname(server->addr);	//why no error this line when not including netdb.h???
+	if(s==NULL)	{
 		printf("error get host by name\n");
 		exit(0);
 	}
 	bzero((char*)&srvaddr, sizeof(srvaddr));
 	srvaddr.sin_family = AF_INET;
 	//printf("%d",sizeof(server->h_addr));
-	bcopy((char *)(server->h_addr), (char *)&srvaddr.sin_addr.s_addr, server->h_length);
+	bcopy((char *)(s->h_addr), (char *)&srvaddr.sin_addr.s_addr, s->h_length);
 
-	srvport = atoi(argv[2]);
+	srvport = server->port;
 	srvaddr.sin_port = htons(srvport);
 
 	//2.connect
@@ -73,5 +82,7 @@ void connect(vkvsserver* server)	//why argc and argv can be optional? if absence
 	if(connect(initsock, (struct sockaddr*)&srvaddr, sizeof(srvaddr)) < 0)	{
 		printf("error connecting\n");
 	}
+
+	server->connected = true;
 
 }

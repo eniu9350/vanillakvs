@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "msg.h"
 
@@ -23,11 +24,12 @@ char* packmsg_put(const char* k, const char* v, int* len)
 				*len = nk+nv+5;
 
 				return msg;
-return 0;
+				return 0;
 }
+
 void unpackmsg_put(char* msg, int len, char** k, char** v)
 {
-	printf("start of up");
+				printf("start of up\n");
 
 				char* p;
 				char* s;
@@ -40,7 +42,7 @@ void unpackmsg_put(char* msg, int len, char** k, char** v)
 								}
 								p++;
 				}
-				
+
 
 				*k = (char*)malloc(s-msg-3+1);
 				memcpy(*k, msg+3, s-msg-3);

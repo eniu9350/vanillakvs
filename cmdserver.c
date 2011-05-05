@@ -10,9 +10,9 @@
 #include <netinet/in.h>
 
 
-struct cmdserver {
+typedef struct  {
 	int port;
-};
+}cmdserver;
 
 cmdserver server;
 table* maintb = NULL;
@@ -23,6 +23,7 @@ table* maintb = NULL;
 int main(int argc, char* argv[])
 {
 	printf("main 1\n");
+	//mmm: check argument here
 	server.port = atoi(argv[1]);
 
 	printf("main 2\n");
