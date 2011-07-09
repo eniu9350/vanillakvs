@@ -12,7 +12,7 @@
 
 typedef struct  {
 	int port;
-}cmdserver;
+} cmdserver;
 
 cmdserver server;
 table* maintb = NULL;
@@ -34,6 +34,9 @@ int main(int argc, char* argv[])
 
 }
 
+int vvv()	{
+		return 1;
+}
 
 void mainloop()
 {
@@ -46,6 +49,7 @@ void mainloop()
 
 	//1. create socket
 	initsock = socket(AF_INET, SOCK_STREAM, 0);
+	printf("**** init sockfd = %d\n", initsock);
 	if(initsock<0)	{
 		printf("initsock error\n");
 	}
@@ -67,6 +71,7 @@ void mainloop()
 	//4. accept
 	while(1)	{
 		accsock = accept(initsock, (struct sockaddr*)&cliaddr, &clilen);
+		printf("**** acc sockfd = %d", accsock);
 		if(accsock < 0)	{
 			printf("error on accept\n");
 		}
